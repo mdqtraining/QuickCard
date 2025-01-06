@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import {
   Button,
   FormControl,
@@ -9,14 +9,14 @@ import {
   Link,
   IconButton,
   Grid,
-  Box
+  Box,
 } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { AppProvider } from "@toolpad/core/AppProvider";
 import { SignInPage } from "@toolpad/core/SignInPage";
 import { useTheme } from "@mui/material/styles";
-import ProductImg from '../assets/products.png'; // Product image
+import ProductImg from "../assets/products.png"; 
 import { useNavigate } from "react-router-dom";
 
 const providers = [{ id: "credentials", name: "Email and Password" }];
@@ -86,7 +86,11 @@ function CustomButton() {
       disableElevation
       fullWidth
       sx={{ my: 2 }}
-      style={{ boxShadow: "0 4px 8px rgba(82, 69, 159, 255)", backgroundColor: "#52459f", color: "white", width:"100px", height:"auto", padding:"4px", alignItems:"center", justifyContent:"center", margin:"80px", marginTop:"20px", marginBottom:"20px" }}
+      style={{
+        boxShadow: "0 4px 8px rgba(82, 69, 159, 255)",
+        backgroundColor: "#52459f",
+        color: "white",
+      }}
     >
       Sign In
     </Button>
@@ -94,10 +98,15 @@ function CustomButton() {
 }
 
 function SignUpLink() {
+  const navigate = useNavigate();
   return (
-    <Link href="/sign-up" variant="body2">
+    <Button
+      variant="text"
+      sx={{ textTransform: "none", marginTop: 2 }}
+      onClick={() => navigate("/sign-up")}
+    >
       Don’t have an account? Sign Up
-    </Link>
+    </Button>
   );
 }
 
@@ -119,27 +128,15 @@ function Subtitle() {
 
 export default function SlotsSignIn({ onSignInSuccess }) {
   const theme = useTheme();
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
 
-  // Dummy email and password values
-  const defaultEmail = "dummy@example.com";
-  const defaultPassword = "dummyPassword123";
-
-  // Handle SignIn
   const handleSignIn = (provider, formData) => {
     const email = formData.get("email");
     const password = formData.get("password");
 
-    // Check if the email and password match the dummy values
     if (email && password) {
-      // Simulate login success (no specific check required)
-      if (email === defaultEmail && password === defaultPassword) {
-        onSignInSuccess(); // Notify App.js that login was successful
-        navigate("/dashboard"); // Redirect to the dashboard
-      } else {
-        // Optional: You can still show this message if needed
-        alert("Invalid email or password!");
-      }
+      onSignInSuccess();
+      navigate("/dashboard");
     } else {
       alert("Please enter both email and password!");
     }
@@ -148,21 +145,26 @@ export default function SlotsSignIn({ onSignInSuccess }) {
   return (
     <AppProvider theme={theme}>
       <Grid container spacing={2}>
-        {/* First column: Product image */}
         <Grid item xs={12} md={6}>
           <Box
             sx={{
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-              height: "100%",
+              height: "65%",
             }}
           >
-            <img src={ProductImg} alt="Product" style={{ width: "75%", height: "75%" }} />
+            <img
+              src={ProductImg}
+              alt="Product"
+              style={{
+                width: "65%",
+                marginTop: "210px",
+                boxShadow: "0 8px 20px rgba(82, 69, 159, 255)",
+              }}
+            />
           </Box>
         </Grid>
-
-        {/* Second column: Sign In card */}
         <Grid item xs={12} md={6}>
           <Box
             sx={{
@@ -172,9 +174,8 @@ export default function SlotsSignIn({ onSignInSuccess }) {
               height: "100%",
             }}
           >
-            {/* Sign-In Form */}
             <SignInPage
-              signIn={handleSignIn} // Use the custom sign-in handler
+              signIn={handleSignIn}
               slots={{
                 title: Title,
                 subtitle: Subtitle,
@@ -192,4 +193,3 @@ export default function SlotsSignIn({ onSignInSuccess }) {
     </AppProvider>
   );
 }
- 

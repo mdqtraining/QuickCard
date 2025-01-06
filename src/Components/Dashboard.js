@@ -15,16 +15,18 @@ import { MdOutlineAttachEmail } from "react-icons/md";
 import { MdOutlinePublishedWithChanges } from "react-icons/md";
 import { HiOutlineChevronDoubleLeft } from "react-icons/hi";
 import { RiMenu2Fill } from "react-icons/ri";
+import { HiOutlineUpload } from "react-icons/hi"; // New icon for ImageUploading
 import { Typography } from "@mui/material";
-import { HiOutlineUserCircle } from "react-icons/hi2"; // Import the profile icon
+import { HiOutlineUserCircle } from "react-icons/hi2";
 import Template from "./Template";
 import TemplateTable from "./TemplateTable";
 import Status from "./Status";
 import Publish from "./Publish";
-import AppBar from "@mui/material/AppBar";  // Import AppBar
-import Toolbar from "@mui/material/Toolbar";  // Import Toolbar
-import Menu from "@mui/material/Menu";  // Import Menu
-import MenuItem from "@mui/material/MenuItem";  // Import MenuItem
+import ImageUploading from "./ImageUploading"; // Importing ImageUploading component
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 
 const drawerWidth = 240;
 
@@ -59,7 +61,7 @@ export default function Dashboard() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const [activePage, setActivePage] = React.useState(null);
-  const [anchorEl, setAnchorEl] = React.useState(null); // For profile menu
+  const [anchorEl, setAnchorEl] = React.useState(null);
   const openProfileMenu = Boolean(anchorEl);
 
   const menuItems = [
@@ -82,6 +84,11 @@ export default function Dashboard() {
       text: "Publish",
       icon: <MdOutlinePublishedWithChanges style={{ fontSize: "20px" }} />,
       page: "Publish",
+    },
+    {
+      text: "Image Uploading",
+      icon: <HiOutlineUpload style={{ fontSize: "20px" }} />,
+      page: "ImageUploading",
     },
   ];
 
@@ -125,7 +132,7 @@ export default function Dashboard() {
           zIndex: theme.zIndex.drawer + 1,
           backgroundColor: "#ffffff",
           boxShadow: "none",
-          marginLeft: open ? `${drawerWidth}px` : "56px", // Drawer effect when open
+          marginLeft: open ? `${drawerWidth}px` : "56px",
           width: open ? `calc(100% - ${drawerWidth}px)` : `calc(100% - 56px)`,
           transition: theme.transitions.create(["margin", "width"], {
             easing: theme.transitions.easing.sharp,
@@ -134,7 +141,6 @@ export default function Dashboard() {
         }}
       >
         <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
-          {/* QuickCard Text on the left side when drawer is closed */}
           {!open && (
             <Typography
               variant="h5"
@@ -147,7 +153,6 @@ export default function Dashboard() {
               QuickCard
             </Typography>
           )}
-          {/* Profile Icon on the right side */}
           <IconButton
             onClick={handleProfileClick}
             sx={{
@@ -180,7 +185,6 @@ export default function Dashboard() {
       <Box sx={{ display: "flex", height: "100vh" }}>
         <MiniDrawer variant="permanent" open={open}>
           <DrawerHeader>
-            {/* "QuickCard" text is only shown when the drawer is open */}
             {open && (
               <Typography
                 variant="h5"
@@ -209,9 +213,9 @@ export default function Dashboard() {
                     minHeight: 48,
                     justifyContent: open ? "initial" : "center",
                     px: 2.5,
-                    margin: "8px 0", // Spacing between items
+                    margin: "8px 0",
                     backgroundColor:
-                      activePage === item.page ? "#635bff" : "transparent",
+                      activePage === item.page ? "#52459f" : "transparent",
                     color: activePage === item.page ? "white" : "gray",
                     borderRadius: activePage === item.page ? "12px" : "0",
                     boxShadow:
@@ -220,13 +224,13 @@ export default function Dashboard() {
                         : "none",
                     "&:hover": {
                       backgroundColor:
-                        activePage === item.page ? "#635bff" : "#d6dfff",
+                        activePage === item.page ? "#52459f" : "#d6dfff",
                       color: activePage === item.page ? "white" : "black",
                       borderRadius: "12px",
                     },
                     "&:hover .MuiListItemIcon-root, &:hover .MuiListItemText-primary":
                       {
-                        color: activePage === item.page ? "white" : "black", // Keep the active tab styles consistent
+                        color: activePage === item.page ? "white" : "black",
                       },
                   }}
                 >
@@ -266,6 +270,7 @@ export default function Dashboard() {
           {activePage === "Template" && <Template />}
           {activePage === "Status" && <Status />}
           {activePage === "Publish" && <Publish />}
+          {activePage === "ImageUploading" && <ImageUploading />}
         </Box>
       </Box>
     </div>
