@@ -15,18 +15,20 @@ import { MdOutlineAttachEmail } from "react-icons/md";
 import { MdOutlinePublishedWithChanges } from "react-icons/md";
 import { HiOutlineChevronDoubleLeft } from "react-icons/hi";
 import { RiMenu2Fill } from "react-icons/ri";
-import { HiOutlineUpload } from "react-icons/hi"; // New icon for ImageUploading
+import { HiOutlineUpload } from "react-icons/hi";
+import { FaDatabase } from "react-icons/fa";
 import { Typography } from "@mui/material";
 import { HiOutlineUserCircle } from "react-icons/hi2";
 import Template from "./Template";
 import TemplateTable from "./TemplateTable";
 import Status from "./Status";
 import Publish from "./Publish";
-import ImageUploading from "./ImageUploading"; // Importing ImageUploading component
+import ImageUploading from "./ImageUploading";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import CardData from "./CardData";
 
 const drawerWidth = 240;
 
@@ -51,7 +53,7 @@ const MiniDrawer = styled(Drawer, {
       duration: theme.transitions.duration.enteringScreen,
     }),
     overflowX: "hidden",
-    backgroundColor: "white",
+    backgroundColor: "#e9ecf2",
     color: "black",
     borderRight: "none",
   },
@@ -86,9 +88,14 @@ export default function Dashboard() {
       page: "Publish",
     },
     {
-      text: "Image Uploading",
+      text: "Upload Image",
       icon: <HiOutlineUpload style={{ fontSize: "20px" }} />,
       page: "ImageUploading",
+    },
+    {
+      text: "Card Data",
+      icon: <FaDatabase style={{ fontSize: "15px" }} />,
+      page: "Card Data",
     },
   ];
 
@@ -215,12 +222,12 @@ export default function Dashboard() {
                     px: 2.5,
                     margin: "8px 0",
                     backgroundColor:
-                      activePage === item.page ? "#52459f" : "transparent",
+                      activePage === item.page ? "#453c72" : "transparent",
                     color: activePage === item.page ? "white" : "gray",
                     borderRadius: activePage === item.page ? "12px" : "0",
                     boxShadow:
                       activePage === item.page
-                        ? "0 4px 8px rgba(0, 0, 0, 0.2)"
+                        ? "0 4px 8px rgb(69,60,114)"
                         : "none",
                     "&:hover": {
                       backgroundColor:
@@ -271,6 +278,7 @@ export default function Dashboard() {
           {activePage === "Status" && <Status />}
           {activePage === "Publish" && <Publish />}
           {activePage === "ImageUploading" && <ImageUploading />}
+          {activePage === "Card Data" && <CardData />}
         </Box>
       </Box>
     </div>

@@ -16,6 +16,7 @@ import Publish from './Components/Publish';
 import SignIn from './Components/SignIn';
 import SignUp from './Components/SignUp';
 import ImageUploading from './Components/ImageUploading';
+import CardData from './Components/CardData';
 
 const DragDropArea = styled(Box)(({ theme }) => ({
   border: '2px dashed #1976d2',
@@ -68,6 +69,7 @@ const App = () => {
             <Route path="/status" element={<Status />} />
             <Route path="/publish" element={<Publish />} />
             <Route path="/image-uploading" element={<ImageUploading />} />
+            <Route path="/card-data" element={<CardData />} />
           </>
         )}
 

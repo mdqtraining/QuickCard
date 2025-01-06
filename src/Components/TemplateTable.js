@@ -135,7 +135,7 @@ const TemplateTable = () => {
   return (
     <div
       style={{
-        backgroundColor: "#f4f7fb",
+        backgroundColor: "#F2EFFF",
         minHeight: "100vh",
         padding: "40px",
         borderRadius: "30px",
