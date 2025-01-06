@@ -14,6 +14,11 @@ import {
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import ProductImg from "../assets/products.png";
+import {
+  send_otp,
+  validate_otp,
+  user_signup,
+} from "../Api service/APIvariables";
 
 export default function SignUp() {
   const [firstName, setFirstName] = useState("");
@@ -22,9 +27,81 @@ export default function SignUp() {
   const [otp, setOtp] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSendOtp = () => {
-    alert(`OTP sent to ${email}`);
+  const handleSendOtp = async () => {
+    if (!email) {
+      alert("Please enter a valid email address.");
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const response = await fetch(send_otp, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to send OTP.");
+      }
+
+      const data = await response.json();
+      alert(`OTP sent successfully to ${email}`);
+    } catch (error) {
+      console.error("Error in handleSendOtp:", error);
+      alert(`Error: ${error.message || "Failed to send OTP."}`);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSignUp = async () => {
+    if (!otp || !password || !firstName || !lastName || !email) {
+      alert("All fields are required.");
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      // Validate the OTP
+      const validateResponse = await fetch(validate_otp, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, otp }),
+      });
+
+      if (!validateResponse.ok) {
+        const validateData = await validateResponse.json();
+        throw new Error(validateData.message || "Invalid OTP.");
+      }
+
+      // Proceed with signup
+      const signupResponse = await fetch(user_signup, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          firstName,
+          lastName,
+          email,
+          password,
+        }),
+      });
+
+      if (!signupResponse.ok) {
+        const signupData = await signupResponse.json();
+        throw new Error(signupData.message || "Signup failed.");
+      }
+
+      alert("Signup successful!");
+    } catch (error) {
+      console.error("Error in handleSignUp:", error);
+      alert(`Error: ${error.message}`);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -32,7 +109,6 @@ export default function SignUp() {
 
   return (
     <Grid container spacing={2} sx={{ height: "100vh" }}>
-      {/* Left Column: Product Image */}
       <Grid item xs={12} md={6}>
         <Box
           sx={{
@@ -56,7 +132,6 @@ export default function SignUp() {
         </Box>
       </Grid>
 
-      {/* Right Column: Sign-Up Form */}
       <Grid item xs={12} md={6}>
         <Box
           sx={{
@@ -84,7 +159,6 @@ export default function SignUp() {
               Sign Up & Get Started Today
             </Typography>
 
-            {/* First Name & Last Name */}
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
@@ -106,7 +180,6 @@ export default function SignUp() {
               </Grid>
             </Grid>
 
-            {/* Email */}
             <TextField
               label="Email Address *"
               variant="outlined"
@@ -119,6 +192,7 @@ export default function SignUp() {
             <Button
               variant="contained"
               fullWidth
+              disabled={isLoading}
               sx={{
                 width: "150px",
                 height: "auto",
@@ -135,12 +209,10 @@ export default function SignUp() {
               }}
               onClick={handleSendOtp}
             >
-              Send OTP
+              {isLoading ? "Sending..." : "Send OTP"}
             </Button>
 
-            {/* OTP & Password Fields */}
             <Grid container spacing={2}>
-              {/* OTP Field */}
               <Grid item xs={12} sm={6}>
                 <TextField
                   label="Enter OTP *"
@@ -151,7 +223,6 @@ export default function SignUp() {
                 />
               </Grid>
 
-              {/* Password Field */}
               <Grid item xs={12} sm={6}>
                 <FormControl fullWidth variant="outlined">
                   <InputLabel htmlFor="outlined-adornment-password">
@@ -180,10 +251,10 @@ export default function SignUp() {
               </Grid>
             </Grid>
 
-            {/* Sign-Up Button */}
             <Button
               fullWidth
               variant="contained"
+              disabled={isLoading}
               sx={{
                 width: "150px",
                 height: "auto",
@@ -195,12 +266,11 @@ export default function SignUp() {
                 color: "white",
                 "&:hover": { backgroundColor: "#41378e" },
               }}
-              onClick={() => alert("Signup Successful!")}
+              onClick={handleSignUp}
             >
-              Sign Up
+              {isLoading ? "Processing..." : "Sign Up"}
             </Button>
 
-            {/* Redirect to SignIn */}
             <Typography
               variant="body2"
               sx={{ textAlign: "center", marginTop: 2 }}
