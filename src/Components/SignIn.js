@@ -16,7 +16,7 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { AppProvider } from "@toolpad/core/AppProvider";
 import { SignInPage } from "@toolpad/core/SignInPage";
 import { useTheme } from "@mui/material/styles";
-import ProductImg from "../assets/products.png"; 
+import ProductImg from "../assets/products.png";
 import { useNavigate } from "react-router-dom";
 
 const providers = [{ id: "credentials", name: "Email and Password" }];
@@ -143,53 +143,55 @@ export default function SlotsSignIn({ onSignInSuccess }) {
   };
 
   return (
-    <AppProvider theme={theme}>
-      <Grid container spacing={2}>
-        <Grid item xs={12} md={6}>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              height: "65%",
-            }}
-          >
-            <img
-              src={ProductImg}
-              alt="Product"
-              style={{
-                width: "65%",
-                marginTop: "210px",
-                boxShadow: "0 8px 20px rgba(82, 69, 159, 255)",
+    <div className="sign-in">
+      <AppProvider theme={theme}>
+        <Grid container spacing={2}>
+          <Grid item xs={12} md={6}>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "65%",
               }}
-            />
-          </Box>
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              height: "100%",
-            }}
-          >
-            <SignInPage
-              signIn={handleSignIn}
-              slots={{
-                title: Title,
-                subtitle: Subtitle,
-                emailField: CustomEmailField,
-                passwordField: CustomPasswordField,
-                submitButton: CustomButton,
-                forgotPasswordLink: ForgotPasswordLink,
-                signUpLink: SignUpLink,
+            >
+              <img
+                src={ProductImg}
+                alt="Product"
+                style={{
+                  width: "65%",
+                  marginTop: "210px",
+                  boxShadow: "0 8px 20px rgba(82, 69, 159, 255)",
+                }}
+              />
+            </Box>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "100%",
               }}
-              providers={providers}
-            />
-          </Box>
+            >
+              <SignInPage
+                signIn={handleSignIn}
+                slots={{
+                  title: Title,
+                  subtitle: Subtitle,
+                  emailField: CustomEmailField,
+                  passwordField: CustomPasswordField,
+                  submitButton: CustomButton,
+                  forgotPasswordLink: ForgotPasswordLink,
+                  signUpLink: SignUpLink,
+                }}
+                providers={providers}
+              />
+            </Box>
+          </Grid>
         </Grid>
-      </Grid>
-    </AppProvider>
+      </AppProvider>
+    </div>
   );
 }

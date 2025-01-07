@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 import {
   Box,
   TextField,
@@ -10,128 +11,201 @@ import {
   OutlinedInput,
   InputAdornment,
   IconButton,
+  FormHelperText,
 } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import ProductImg from "../assets/products.png";
 import {
   send_otp,
   validate_otp,
   user_signup,
 } from "../Api service/APIvariables";
+import { useNavigate } from "react-router-dom";
+import ReactDOM from "react-dom";
+import Countdown from "react-countdown";
 
 export default function SignUp() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
+  const [otpSent, setOtpSent] = useState(false);
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [otpValidated, setOtpValidated] = useState(false);
+  const [passwordStrengthText, setPasswordStrengthText] = useState("");
+  const [isPasswordTouched, setIsPasswordTouched] = useState(false);
+  const [timerKey, setTimerKey] = useState(0); // Added to reset countdown
 
+  // Handle Send OTP
   const handleSendOtp = async () => {
-    if (!email) {
+    if (!email || !email.includes("@")) {
       alert("Please enter a valid email address.");
       return;
     }
-
     setIsLoading(true);
+
     try {
-      const response = await fetch(send_otp, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+      const formData = new FormData();
+      formData.append("email", email);
+
+      const response = await axios.post(send_otp, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to send OTP.");
+      if (response.status === 200) {
+        alert(`OTP sent successfully to ${email}`);
+        setOtpSent(true);
+        setTimerKey((prevKey) => prevKey + 1); // Reset the timer on each OTP send
+      } else {
+        alert("Failed to send OTP.");
       }
-
-      const data = await response.json();
-      alert(`OTP sent successfully to ${email}`);
     } catch (error) {
-      console.error("Error in handleSendOtp:", error);
-      alert(`Error: ${error.message || "Failed to send OTP."}`);
+      console.error("Error sending OTP:", error);
+      alert("Failed to send OTP. Please try again.");
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleSignUp = async () => {
-    if (!otp || !password || !firstName || !lastName || !email) {
-      alert("All fields are required.");
+  // Handle Validate OTP
+  const handleValidateOtp = async () => {
+    if (!otp || !email) {
+      alert("Please enter OTP and email.");
       return;
     }
 
     setIsLoading(true);
+
     try {
-      // Validate the OTP
-      const validateResponse = await fetch(validate_otp, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, otp }),
+      const formData = new FormData();
+      formData.append("email", email);
+      formData.append("otp", otp);
+
+      const response = await axios.post(validate_otp, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       });
 
-      if (!validateResponse.ok) {
-        const validateData = await validateResponse.json();
-        throw new Error(validateData.message || "Invalid OTP.");
+      if (response.status === 200 && response.data.success) {
+        alert("OTP validated successfully!");
+        setOtpValidated(true);
+      } else {
+        alert(response.data.message || "Invalid OTP or validation failed.");
       }
-
-      // Proceed with signup
-      const signupResponse = await fetch(user_signup, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          firstName,
-          lastName,
-          email,
-          password,
-        }),
-      });
-
-      if (!signupResponse.ok) {
-        const signupData = await signupResponse.json();
-        throw new Error(signupData.message || "Signup failed.");
-      }
-
-      alert("Signup successful!");
     } catch (error) {
-      console.error("Error in handleSignUp:", error);
-      alert(`Error: ${error.message}`);
+      console.error("Error validating OTP:", error);
+      alert("OTP validation failed. Please try again.");
     } finally {
       setIsLoading(false);
     }
   };
 
+  // Submit function
+  const submit = async () => {
+    if (password === confirmPassword) {
+      const formData = new FormData();
+      formData.append("firstName", firstName);
+      formData.append("lastName", lastName);
+      formData.append("email", email);
+      formData.append("password", password);
+
+      try {
+        const response = await axios.post(user_signup, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+
+        if (response.data.error) {
+          alert(response.data.message);
+        } else {
+          alert(response.data.message);
+
+          // Store user data in localStorage
+          localStorage.setItem("firstName", firstName);
+          localStorage.setItem("lastName", lastName);
+          localStorage.setItem("email", email);
+          localStorage.setItem("Userauth", true);
+          localStorage.setItem("userId", response.data.userId);
+
+          // Clear form data after successful signup
+          setEmail("");
+          setFirstName("");
+          setLastName("");
+          setPassword("");
+          setConfirmPassword("");
+        }
+      } catch (error) {
+        console.error("Error during signup:", error);
+        alert("Signup failed. Please try again.");
+      }
+    } else {
+      alert("Error: Passwords do not match.");
+    }
+  };
+
+  // Show/Hide password function
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleMouseDownPassword = (event) => event.preventDefault();
 
-  return (
-    <Grid container spacing={2} sx={{ height: "100vh" }}>
-      <Grid item xs={12} md={6}>
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            height: "100%",
-            backgroundColor: "#white",
-          }}
-        >
-          <img
-            src={ProductImg}
-            alt="Product"
-            style={{
-              width: "75%",
-              height: "75%",
-              marginTop: "60px",
-              boxShadow: "0 8px 20px rgba(82, 69, 159, 255)",
-            }}
-          />
-        </Box>
-      </Grid>
+  // Handle password input change and validate strength
+  const handlePasswordChange = (event) => {
+    const passwordValue = event.target.value;
+    setPassword(passwordValue);
 
+    if (isPasswordTouched) {
+      validatePasswordStrength(passwordValue);
+    }
+  };
+
+  const handleConfirmPasswordChange = (event) => {
+    setConfirmPassword(event.target.value);
+  };
+
+  // Validate password strength
+  const validatePasswordStrength = (password) => {
+    const length = password.length;
+    if (length < 6) {
+      setPasswordStrengthText("Password is too weak");
+    } else if (length < 8) {
+      setPasswordStrengthText("Password is medium strength");
+    } else {
+      setPasswordStrengthText("Password is strong");
+    }
+  };
+
+  const handlePasswordFocus = () => {
+    setIsPasswordTouched(true);
+    validatePasswordStrength(password);
+  };
+
+  // SignInLink component
+  function SignInLink() {
+    const navigate = useNavigate();
+    return (
+      <Button
+        variant="text"
+        sx={{ textTransform: "none", marginTop: 2 }}
+        onClick={() => navigate("sign-in")}
+      >
+        Already have an account? Sign In
+      </Button>
+    );
+  }
+
+  // Countdown renderer function
+  const countdownRenderer = ({ seconds }) => {
+    return <Typography>{seconds} seconds remaining</Typography>;
+  };
+
+  return (
+    <div className="sign-up" style={{ height: "100vh" }}>
       <Grid item xs={12} md={6}>
         <Box
           sx={{
@@ -158,7 +232,6 @@ export default function SignUp() {
             >
               Sign Up & Get Started Today
             </Typography>
-
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
@@ -179,7 +252,6 @@ export default function SignUp() {
                 />
               </Grid>
             </Grid>
-
             <TextField
               label="Email Address *"
               variant="outlined"
@@ -211,83 +283,109 @@ export default function SignUp() {
             >
               {isLoading ? "Sending..." : "Send OTP"}
             </Button>
-
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  label="Enter OTP *"
-                  variant="outlined"
-                  fullWidth
-                  value={otp}
-                  onChange={(e) => setOtp(e.target.value)}
-                />
-              </Grid>
-
-              <Grid item xs={12} sm={6}>
-                <FormControl fullWidth variant="outlined">
-                  <InputLabel htmlFor="outlined-adornment-password">
-                    Password *
-                  </InputLabel>
-                  <OutlinedInput
-                    id="outlined-adornment-password"
-                    type={showPassword ? "text" : "password"}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    endAdornment={
-                      <InputAdornment position="end">
-                        <IconButton
-                          aria-label="toggle password visibility"
-                          onClick={handleClickShowPassword}
-                          onMouseDown={handleMouseDownPassword}
-                          edge="end"
-                        >
-                          {showPassword ? <VisibilityOff /> : <Visibility />}
-                        </IconButton>
-                      </InputAdornment>
-                    }
-                    label="Password *"
+            {otpSent && (
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    label="Enter OTP *"
+                    variant="outlined"
+                    fullWidth
+                    value={otp}
+                    onChange={(e) => setOtp(e.target.value)}
                   />
-                </FormControl>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <Button
+                    variant="contained"
+                    fullWidth
+                    disabled={isLoading}
+                    sx={{
+                      width: "150px",
+                      height: "auto",
+                      padding: "6px",
+                      marginTop: "10px",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      backgroundColor: "#52459f",
+                      marginLeft: "130px",
+                      boxShadow: "0 4px 8px rgba(82, 69, 159, 255)",
+                      color: "white",
+                      "&:hover": { backgroundColor: "#41378e" },
+                    }}
+                    onClick={handleValidateOtp}
+                  >
+                    {isLoading ? "Validating..." : "Validate OTP"}
+                  </Button>
+                  {/* Countdown timer here */}
+                  <Countdown
+                    key={timerKey} // This will reset the timer on each OTP request
+                    date={Date.now() + 60000} // Countdown from 60 seconds
+                    renderer={countdownRenderer}
+                  />
+                </Grid>
               </Grid>
-            </Grid>
-
+            )}
+            <FormControl fullWidth variant="outlined" margin="normal">
+              <InputLabel>Password *</InputLabel>
+              <OutlinedInput
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={handlePasswordChange}
+                onFocus={handlePasswordFocus}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                }
+                label="Password *"
+              />
+              {isPasswordTouched && (
+                <FormHelperText>{passwordStrengthText}</FormHelperText>
+              )}
+            </FormControl>
+            <FormControl fullWidth variant="outlined" margin="normal">
+              <InputLabel>Confirm Password *</InputLabel>
+              <OutlinedInput
+                type={showPassword ? "text" : "password"}
+                value={confirmPassword}
+                onChange={handleConfirmPasswordChange}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                }
+                label="Confirm Password *"
+              />
+            </FormControl>
             <Button
-              fullWidth
               variant="contained"
-              disabled={isLoading}
+              fullWidth
+              onClick={submit}
               sx={{
-                width: "150px",
-                height: "auto",
+                marginTop: 2,
                 padding: "6px",
-                boxShadow: "0 4px 8px rgba(82, 69, 159, 255)",
-                marginLeft: "130px",
-                mt: 3,
                 backgroundColor: "#52459f",
-                color: "white",
                 "&:hover": { backgroundColor: "#41378e" },
               }}
-              onClick={handleSignUp}
             >
-              {isLoading ? "Processing..." : "Sign Up"}
+              {isLoading ? "Signing Up..." : "Sign Up"}
             </Button>
 
-            <Typography
-              variant="body2"
-              sx={{ textAlign: "center", marginTop: 2 }}
-              color="text.secondary"
-            >
-              Already have an account?{" "}
-              <Button
-                variant="text"
-                onClick={() => alert("Redirect to Sign In screen")}
-                sx={{ textTransform: "none" }}
-              >
-                Sign In
-              </Button>
-            </Typography>
+            {/* SignIn Link component */}
+            <SignInLink />
           </Box>
         </Box>
       </Grid>
-    </Grid>
+    </div>
   );
 }
