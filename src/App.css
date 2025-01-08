@@ -1,7 +1,9 @@
 /* App.css */
 
 /* General Box-Sizing to ensure padding and margins don’t cause layout issues */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
@@ -59,7 +61,7 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: 'Arial', sans-serif;
+  font-family: "Arial", sans-serif;
 }
 
 main {
@@ -67,3 +69,22 @@ main {
   margin-top: 10px; /* Adds space between main content and the header */
 }
 
+/* Add styles to hide product image on mobile */
+/* @media (max-width: 768px) {
+  .product-image {
+    display: none !important;
+  }
+} */
+
+/* Optionally, you can add styles to make the sign-in form more mobile-friendly */
+/* @media (min-width: 769px) {
+  .sign-in {
+    image-rendering: url("../src/assets/products.png");
+    padding: 10px;
+    display: block;
+  }
+} */
+
+.css-16wblaj-MuiInputBase-input-MuiOutlinedInput-input {
+  padding: 14.5px 12px !important;
+}

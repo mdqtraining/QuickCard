@@ -137,7 +137,7 @@ const Status = () => {
           position: "absolute", // Make sure it stays on the right
           right: "120px", // Position to the right side
           marginbottom: "20px",
-          boxShadow:"0 4px 8px rgba(0, 0, 0, 0.1)",
+          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
         }}
       >
         <SearchIcon sx={{ color: "#635bff" }} />
@@ -177,13 +177,14 @@ const Status = () => {
           <Typography
             sx={{
               fontWeight: currentTab === "sent" ? "bold" : "normal",
-              backgroundColor: currentTab === "sent" ? "#635bff" : "#e0e0e0",
+              backgroundColor: currentTab === "sent" ? "#453c72" : "#e0e0e0",
               color: currentTab === "sent" ? "white" : "black",
               cursor: "pointer",
               padding: "8px 16px",
               borderRadius: "6px",
+              // boxShadow: "0 4px 8px rgb(69,60,114)",
               ":hover": {
-                backgroundColor: currentTab === "sent" ? "#635bff" : "#d6d6d6",
+                backgroundColor: currentTab === "sent" ? "#453c72" : "#d6d6d6",
               },
               fontSize: "16px",
             }}
@@ -199,6 +200,7 @@ const Status = () => {
               cursor: "pointer",
               padding: "8px 16px",
               borderRadius: "6px",
+              // boxShadow: "0 4px 8px rgb(69,60,114)",
               ":hover": {
                 backgroundColor:
                   currentTab === "failed" ? "#635bff" : "#d6d6d6",
@@ -218,6 +220,7 @@ const Status = () => {
               cursor: "pointer",
               padding: "8px 16px",
               borderRadius: "6px",
+              // boxShadow: "0 4px 8px rgb(69,60,114)",
               ":hover": {
                 backgroundColor:
                   currentTab === "responded" ? "#635bff" : "#d6d6d6",

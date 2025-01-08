@@ -104,10 +104,10 @@ function CardData() {
   return (
     <div
       style={{
-        padding: "40px",
+        // padding: "40px",
         borderRadius: "30px",
-        backgroundColor: "#f2f6fa",
-        minHeight: "100vh",
+        backgroundColor: "#f4f4f9",
+        minHeight: "90vh",
         position: "relative",
       }}
     >
@@ -130,16 +130,16 @@ function CardData() {
             maxWidth: "200px",
             padding: "2px 10px",
             position: "absolute",
-            right: "40px",
+            right: "60px",
             boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
           }}
         >
-          <SearchIcon sx={{ color: "#635bff" }} />
+          <SearchIcon sx={{ color: "#453c72" }} />
           <InputBase
             sx={{
               ml: 1,
               flex: 1,
-              color: "#635bff",
+              color: "#453c72",
               fontSize: "14px",
             }}
             placeholder="Search..."

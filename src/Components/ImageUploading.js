@@ -51,9 +51,9 @@ const ImageUploading = () => {
         alignItems: "center",
         justifyContent: "center",
         minHeight: "100vh",
-        backgroundColor: "#F2EFFF",
+        backgroundColor: "#f4f4f9",
         padding: "40px",
-        borderRadius:"30px",
+        borderRadius: "30px",
       }}
     >
       <Typography variant="h4" gutterBottom>
@@ -114,6 +114,5 @@ const ImageUploading = () => {
     </Box>
   );
 };
-
 
 export default ImageUploading;

@@ -18,6 +18,7 @@ import { SignInPage } from "@toolpad/core/SignInPage";
 import { useTheme } from "@mui/material/styles";
 import ProductImg from "../assets/products.png";
 import { useNavigate } from "react-router-dom";
+import "../App.css"; // Make sure to import the CSS here
 
 const providers = [{ id: "credentials", name: "Email and Password" }];
 
@@ -146,16 +147,19 @@ export default function SlotsSignIn({ onSignInSuccess }) {
     <div className="sign-in">
       <AppProvider theme={theme}>
         <Grid container spacing={2}>
-          <Grid item xs={12} md={6}>
+          {/* Product Image Grid */}
+          <Grid item xs={12} lg={6}>
             <Box
               sx={{
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
                 height: "65%",
+                display: { xs: "none", lg: "block" },
               }}
             >
               <img
+                // className="product-image"
                 src={ProductImg}
                 alt="Product"
                 style={{
@@ -166,6 +170,7 @@ export default function SlotsSignIn({ onSignInSuccess }) {
               />
             </Box>
           </Grid>
+          {/* Sign-In Form Grid */}
           <Grid item xs={12} md={6}>
             <Box
               sx={{

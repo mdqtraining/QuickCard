@@ -21,8 +21,8 @@ import {
   user_signup,
 } from "../Api service/APIvariables";
 import { useNavigate } from "react-router-dom";
-import ReactDOM from "react-dom";
 import Countdown from "react-countdown";
+import OTP from "./OTP"; // Import your OTP component here
 
 export default function SignUp() {
   const [firstName, setFirstName] = useState("");
@@ -37,9 +37,8 @@ export default function SignUp() {
   const [otpValidated, setOtpValidated] = useState(false);
   const [passwordStrengthText, setPasswordStrengthText] = useState("");
   const [isPasswordTouched, setIsPasswordTouched] = useState(false);
-  const [timerKey, setTimerKey] = useState(0); // Added to reset countdown
+  const [timerKey, setTimerKey] = useState(0);
 
-  // Handle Send OTP
   const handleSendOtp = async () => {
     if (!email || !email.includes("@")) {
       alert("Please enter a valid email address.");
@@ -60,7 +59,7 @@ export default function SignUp() {
       if (response.status === 200) {
         alert(`OTP sent successfully to ${email}`);
         setOtpSent(true);
-        setTimerKey((prevKey) => prevKey + 1); // Reset the timer on each OTP send
+        setTimerKey((prevKey) => prevKey + 1); // Increment timer key to reset countdown
       } else {
         alert("Failed to send OTP.");
       }
@@ -72,7 +71,6 @@ export default function SignUp() {
     }
   };
 
-  // Handle Validate OTP
   const handleValidateOtp = async () => {
     if (!otp || !email) {
       alert("Please enter OTP and email.");
@@ -106,7 +104,6 @@ export default function SignUp() {
     }
   };
 
-  // Submit function
   const submit = async () => {
     if (password === confirmPassword) {
       const formData = new FormData();
@@ -150,11 +147,9 @@ export default function SignUp() {
     }
   };
 
-  // Show/Hide password function
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleMouseDownPassword = (event) => event.preventDefault();
 
-  // Handle password input change and validate strength
   const handlePasswordChange = (event) => {
     const passwordValue = event.target.value;
     setPassword(passwordValue);
@@ -168,7 +163,6 @@ export default function SignUp() {
     setConfirmPassword(event.target.value);
   };
 
-  // Validate password strength
   const validatePasswordStrength = (password) => {
     const length = password.length;
     if (length < 6) {
@@ -185,7 +179,6 @@ export default function SignUp() {
     validatePasswordStrength(password);
   };
 
-  // SignInLink component
   function SignInLink() {
     const navigate = useNavigate();
     return (
@@ -199,191 +192,315 @@ export default function SignUp() {
     );
   }
 
-  // Countdown renderer function
-  const countdownRenderer = ({ seconds }) => {
-    return <Typography>{seconds} seconds remaining</Typography>;
+  // Timer renderer for Countdown component
+  const countdownRenderer = ({ minutes, seconds }) => {
+    return (
+      <Typography>
+        {minutes < 10 ? `0${minutes}` : minutes}:
+        {seconds < 10 ? `0${seconds}` : seconds}
+      </Typography>
+    );
+  };
+
+  const handleResendOtp = () => {
+    setOtpSent(false); // Reset OTP sent status
+    setOtp(""); // Clear the OTP field
+    setTimerKey((prevKey) => prevKey + 1); // Reset the timer
+    handleSendOtp(); // Send the OTP again
   };
 
   return (
     <div className="sign-up" style={{ height: "100vh" }}>
-      <Grid item xs={12} md={6}>
+      <Grid
+        container
+        justifyContent="center"
+        alignItems="center"
+        sx={{ height: "100%" }}
+      >
         <Box
           sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            height: "100%",
+            maxWidth: 500,
+            width: "100%",
+            border: "1px solid #ccc",
+            borderRadius: 2,
             padding: 3,
+            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
           }}
         >
-          <Box
-            sx={{
-              maxWidth: 400,
-              width: "100%",
-              border: "1px solid #ccc",
-              borderRadius: 2,
-              padding: 3,
-              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-            }}
+          <Typography
+            variant="h5"
+            sx={{ marginBottom: 2, textAlign: "center" }}
           >
-            <Typography
-              variant="h5"
-              sx={{ marginBottom: 2, textAlign: "center" }}
-            >
-              Sign Up & Get Started Today
-            </Typography>
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  label="First Name *"
-                  variant="outlined"
-                  fullWidth
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
+            Sign Up & Get Started Today
+          </Typography>
+
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="First Name *"
+                variant="outlined"
+                fullWidth
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                sx={{
+                  marginTop: "10px",
+                }}
+                InputProps={{
+                  sx: {
+                    height: "40px", // Ensure consistent height
+                    padding: "0 14px", // Padding for the input text
+                  },
+                }}
+                InputLabelProps={{
+                  sx: {
+                    fontSize: "14px", // Adjust font size for label
+                    transform: "translate(14px, 12px) scale(1)", // Default position
+                    "&.MuiInputLabel-shrink": {
+                      transform: "translate(14px, -5px) scale(0.75)", // Adjusted for focused/shrink state
+                    },
+                  },
+                }}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Last Name *"
+                variant="outlined"
+                fullWidth
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                sx={{
+                  marginTop: "10px",
+                }}
+                InputProps={{
+                  sx: {
+                    height: "40px", // Ensure consistent height
+                    padding: "0 14px", // Padding for the input text
+                  },
+                }}
+                InputLabelProps={{
+                  sx: {
+                    fontSize: "14px", // Adjust font size for label
+                    transform: "translate(14px, 12px) scale(1)", // Default position
+                    "&.MuiInputLabel-shrink": {
+                      transform: "translate(14px, -5px) scale(0.75)", // Adjusted for focused/shrink state
+                    },
+                  },
+                }}
+              />
+            </Grid>
+          </Grid>
+
+          <Grid container spacing={2}>
+            {/* Email Address Field */}
+            <Grid item xs={12} sm={8}>
+              <TextField
+                label="Email Address *"
+                variant="outlined"
+                fullWidth
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                sx={{
+                  marginTop: "10px",
+                }}
+                InputProps={{
+                  sx: {
+                    height: "40px", // Ensure consistent height
+                    padding: "0 14px", // Padding for the input text
+                  },
+                }}
+                InputLabelProps={{
+                  sx: {
+                    fontSize: "14px", // Adjust font size for label
+                    transform: "translate(14px, 12px) scale(1)", // Default position
+                    "&.MuiInputLabel-shrink": {
+                      transform: "translate(14px, -5px) scale(0.75)", // Adjusted for focused/shrink state
+                    },
+                  },
+                }}
+              />
+            </Grid>
+
+            {/* Send OTP Button */}
+            <Grid item xs={12} sm={4}>
+              <Button
+                variant="contained"
+                fullWidth
+                onClick={handleSendOtp}
+                sx={{
+                  height: "40px", // Adjust button height
+                  marginTop: "10px", // Align with the email field
+                  backgroundColor: "#52459f",
+                  "&:hover": { backgroundColor: "#41378e" },
+                }}
+              >
+                {isLoading ? "Sending..." : "Send OTP"}
+              </Button>
+            </Grid>
+          </Grid>
+
+          {/* Timer and Resend OTP Below Email */}
+          {otpSent && (
+            <Grid container spacing={2} sx={{ marginTop: 2 }}>
+              <Grid
+                item
+                xs={4}
+                sx={{ display: "flex", justifyContent: "flex-start" }}
+              >
+                <Countdown
+                  key={timerKey}
+                  date={Date.now() + 120000} // 2 minutes timer (120,000 ms)
+                  renderer={countdownRenderer}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  label="Last Name *"
-                  variant="outlined"
-                  fullWidth
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
-                />
+              <Grid
+                item
+                xs={8}
+                sx={{ display: "flex", justifyContent: "center" }}
+              >
+                <Button
+                  variant="text"
+                  onClick={handleResendOtp}
+                  sx={{
+                    textTransform: "none",
+                    color: "#52459f",
+                    "&:hover": { backgroundColor: "#f2f2f2" },
+                  }}
+                >
+                  Resend OTP
+                </Button>
               </Grid>
             </Grid>
-            <TextField
-              label="Email Address *"
-              variant="outlined"
-              fullWidth
-              margin="normal"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
+          )}
+
+          {/* OTP Input */}
+          {otpSent && (
+            <Box sx={{ marginTop: 2, textAlign: "center" }}>
+              <OTP
+                separator={<span>-</span>}
+                value={otp}
+                onChange={setOtp}
+                length={5}
+              />
+            </Box>
+          )}
+
+          {/* OTP Validation Button */}
+          {otpSent && (
             <Button
               variant="contained"
-              fullWidth
               disabled={isLoading}
               sx={{
-                width: "150px",
-                height: "auto",
-                padding: "6px",
-                marginBottom: "20px",
+                width: "100%",
+                height: "40px", // Adjust height of button
                 marginTop: "10px",
-                alignItems: "center",
-                justifyContent: "center",
-                backgroundColor: "#52459f",
-                marginLeft: "130px",
-                boxShadow: "0 4px 8px rgba(82, 69, 159, 255)",
-                color: "white",
-                "&:hover": { backgroundColor: "#41378e" },
-              }}
-              onClick={handleSendOtp}
-            >
-              {isLoading ? "Sending..." : "Send OTP"}
-            </Button>
-            {otpSent && (
-              <Grid container spacing={2}>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    label="Enter OTP *"
-                    variant="outlined"
-                    fullWidth
-                    value={otp}
-                    onChange={(e) => setOtp(e.target.value)}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <Button
-                    variant="contained"
-                    fullWidth
-                    disabled={isLoading}
-                    sx={{
-                      width: "150px",
-                      height: "auto",
-                      padding: "6px",
-                      marginTop: "10px",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      backgroundColor: "#52459f",
-                      marginLeft: "130px",
-                      boxShadow: "0 4px 8px rgba(82, 69, 159, 255)",
-                      color: "white",
-                      "&:hover": { backgroundColor: "#41378e" },
-                    }}
-                    onClick={handleValidateOtp}
-                  >
-                    {isLoading ? "Validating..." : "Validate OTP"}
-                  </Button>
-                  {/* Countdown timer here */}
-                  <Countdown
-                    key={timerKey} // This will reset the timer on each OTP request
-                    date={Date.now() + 60000} // Countdown from 60 seconds
-                    renderer={countdownRenderer}
-                  />
-                </Grid>
-              </Grid>
-            )}
-            <FormControl fullWidth variant="outlined" margin="normal">
-              <InputLabel>Password *</InputLabel>
-              <OutlinedInput
-                type={showPassword ? "text" : "password"}
-                value={password}
-                onChange={handlePasswordChange}
-                onFocus={handlePasswordFocus}
-                endAdornment={
-                  <InputAdornment position="end">
-                    <IconButton
-                      onClick={handleClickShowPassword}
-                      onMouseDown={handleMouseDownPassword}
-                    >
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                }
-                label="Password *"
-              />
-              {isPasswordTouched && (
-                <FormHelperText>{passwordStrengthText}</FormHelperText>
-              )}
-            </FormControl>
-            <FormControl fullWidth variant="outlined" margin="normal">
-              <InputLabel>Confirm Password *</InputLabel>
-              <OutlinedInput
-                type={showPassword ? "text" : "password"}
-                value={confirmPassword}
-                onChange={handleConfirmPasswordChange}
-                endAdornment={
-                  <InputAdornment position="end">
-                    <IconButton
-                      onClick={handleClickShowPassword}
-                      onMouseDown={handleMouseDownPassword}
-                    >
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                }
-                label="Confirm Password *"
-              />
-            </FormControl>
-            <Button
-              variant="contained"
-              fullWidth
-              onClick={submit}
-              sx={{
-                marginTop: 2,
                 padding: "6px",
+                marginTop: 2,
                 backgroundColor: "#52459f",
                 "&:hover": { backgroundColor: "#41378e" },
               }}
+              onClick={handleValidateOtp}
             >
-              {isLoading ? "Signing Up..." : "Sign Up"}
+              {isLoading ? "Validating..." : "Validate OTP"}
             </Button>
+          )}
 
-            {/* SignIn Link component */}
-            <SignInLink />
-          </Box>
+          {/* Password & Confirm Password */}
+          <FormControl fullWidth margin="normal">
+            <InputLabel
+              htmlFor="password"
+              sx={{
+                fontSize: "14px", // Adjust label font size
+                transform: "translate(14px, 12px) scale(1)", // Default position
+                "&.MuiInputLabel-shrink": {
+                  transform: "translate(14px, -5px) scale(0.75)", // Shrink state
+                },
+              }}
+            >
+              Password *
+            </InputLabel>
+            <OutlinedInput
+              id="password"
+              type={showPassword ? "text" : "password"}
+              value={password}
+              onChange={handlePasswordChange}
+              onFocus={handlePasswordFocus}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={handleClickShowPassword}
+                    onMouseDown={handleMouseDownPassword}
+                    edge="end"
+                  >
+                    {showPassword ? <Visibility /> : <VisibilityOff />}
+                  </IconButton>
+                </InputAdornment>
+              }
+              sx={{
+                height: "40px", // Adjust height
+                padding: "0 14px", // Padding for input text
+              }}
+              label="Password"
+            />
+            {password && isPasswordTouched && (
+              <FormHelperText>{passwordStrengthText}</FormHelperText>
+            )}
+          </FormControl>
+
+          <FormControl fullWidth margin="normal">
+            <InputLabel
+              htmlFor="confirmPassword"
+              sx={{
+                fontSize: "14px", // Adjust label font size
+                transform: "translate(14px, 12px) scale(1)", // Default position
+                "&.MuiInputLabel-shrink": {
+                  transform: "translate(14px, -5px) scale(0.75)", // Shrink state
+                },
+              }}
+            >
+              Confirm Password *
+            </InputLabel>
+            <OutlinedInput
+              id="confirmPassword"
+              type={showPassword ? "text" : "password"}
+              value={confirmPassword}
+              onChange={handleConfirmPasswordChange}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={handleClickShowPassword}
+                    onMouseDown={handleMouseDownPassword}
+                    edge="end"
+                  >
+                    {showPassword ? <Visibility /> : <VisibilityOff />}
+                  </IconButton>
+                </InputAdornment>
+              }
+              sx={{
+                height: "40px", // Adjust height of the input field
+                padding: "0 14px", // Padding for input text
+              }}
+              label="Confirm Password"
+            />
+          </FormControl>
+
+          {/* Submit Button */}
+          <Button
+            variant="contained"
+            onClick={submit}
+            sx={{
+              width: "100%",
+              height: "40px", // Adjust height of button
+              marginTop: "10px",
+              backgroundColor: "#52459f",
+              "&:hover": { backgroundColor: "#41378e" },
+            }}
+          >
+            {isLoading ? "Signing up..." : "Sign Up"}
+          </Button>
+
+          {/* Sign In Link */}
+          <SignInLink />
         </Box>
       </Grid>
     </div>

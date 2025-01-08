@@ -21,8 +21,8 @@ const Template = () => {
     <div
       className="template"
       style={{
-        padding: "40px",
-        paddingTop:"10px",
+        padding: "20px",
+        // paddingTop: "10px",
         backgroundColor: "#f4f4f9", // Background color added here
         borderRadius: "30px",
         minHeight: "100vh",
@@ -40,7 +40,7 @@ const Template = () => {
           marginBottom: "30px",
           fontWeight: "bold",
           color: "#333",
-          paddingTop: "20px",
+          // paddingTop: "20px",
         }}
       ></Typography>
       <Container
@@ -139,7 +139,12 @@ const Template = () => {
               marginTop: "60px",
             }}
           >
-            <Button type="submit" variant="contained" color="primary">
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              style={{ backgroundColor: "#453c72" }}
+            >
               Submit
             </Button>
           </div>

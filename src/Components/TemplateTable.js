@@ -135,9 +135,9 @@ const TemplateTable = () => {
   return (
     <div
       style={{
-        backgroundColor: "#F2EFFF",
+        backgroundColor: "#f4f4f9",
         minHeight: "100vh",
-        padding: "40px",
+        padding: "20px",
         borderRadius: "30px",
         position: "relative",
       }}
@@ -152,7 +152,8 @@ const TemplateTable = () => {
             alignItems: "center",
             position: "absolute",
             left: "40px",
-            backgroundColor: "#635bff",
+            backgroundColor: "#453c72",
+            fontWeight: "bold",
           }}
         >
           Create Template
@@ -171,12 +172,12 @@ const TemplateTable = () => {
             boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
           }}
         >
-          <SearchIcon sx={{ color: "#635bff" }} />
+          <SearchIcon sx={{ color: "#453C72" }} />
           <InputBase
             sx={{
               ml: 1,
               flex: 1,
-              color: "#635bff",
+              color: "#453C72",
               fontSize: "14px",
             }}
             placeholder="Search..."

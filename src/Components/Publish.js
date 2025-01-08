@@ -63,8 +63,8 @@ const Publish = () => {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        padding: "30px",
-        backgroundColor: "#f4f7fb",
+        padding: "40px",
+        backgroundColor: "#f4f4f9",
         minHeight: "100vh",
         boxSizing: "border-box",
         borderRadius: "30px",
@@ -82,7 +82,7 @@ const Publish = () => {
 
       <div
         style={{
-          width: "1000px",
+          width: "800px",
           backgroundColor: "#fff",
           borderRadius: "8px",
           boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
@@ -138,7 +138,7 @@ const Publish = () => {
                 border: "1px solid #ccc",
                 backgroundColor: "#fff",
                 boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-                zIndex: 10,
+                // zIndex: 10,
               }}
             >
               <div
@@ -150,7 +150,7 @@ const Publish = () => {
                   transition: "background-color 0.3s, color 0.3s",
                 }}
                 onMouseEnter={(e) => {
-                  e.target.style.backgroundColor = "#3d5a80"; // Hover color
+                  e.target.style.backgroundColor = "#453c72"; // Hover color
                   e.target.style.color = "white"; // Text color white
                 }}
                 onMouseLeave={(e) => {
@@ -169,7 +169,7 @@ const Publish = () => {
                   transition: "background-color 0.3s, color 0.3s",
                 }}
                 onMouseEnter={(e) => {
-                  e.target.style.backgroundColor = "#3d5a80"; // Hover color
+                  e.target.style.backgroundColor = "#453c72"; // Hover color
                   e.target.style.color = "white"; // Text color white
                 }}
                 onMouseLeave={(e) => {
@@ -188,7 +188,7 @@ const Publish = () => {
                   transition: "background-color 0.3s, color 0.3s",
                 }}
                 onMouseEnter={(e) => {
-                  e.target.style.backgroundColor = "#3d5a80"; // Hover color
+                  e.target.style.backgroundColor = "#453c72"; // Hover color
                   e.target.style.color = "white"; // Text color white
                 }}
                 onMouseLeave={(e) => {
@@ -257,9 +257,9 @@ const Publish = () => {
           <button
             onClick={handlePublish}
             style={{
-              width: "auto",
+              width: "150px",
               padding: "12px",
-              backgroundColor: "#007BFF",
+              backgroundColor: "#453c72",
               color: "#fff",
               border: "none",
               borderRadius: "4px",

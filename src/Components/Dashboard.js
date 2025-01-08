@@ -30,7 +30,12 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import CardData from "./CardData";
 
-const drawerWidth = 240;
+// Import the new icons
+import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
+import ChatBubbleOutlineOutlinedIcon from "@mui/icons-material/ChatBubbleOutlineOutlined";
+
+const drawerWidth = 240; // Default width for larger screens
+const drawerWidthMobile = 56; // Smaller width for mobile screens
 
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
@@ -43,17 +48,17 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 const MiniDrawer = styled(Drawer, {
   shouldForwardProp: (prop) => prop !== "open",
 })(({ theme, open }) => ({
-  width: open ? drawerWidth : 56, // When closed, only shows icons
+  width: open ? drawerWidth : drawerWidthMobile, // Default to mobile width when closed
   flexShrink: 0,
   whiteSpace: "nowrap",
   "& .MuiDrawer-paper": {
-    width: open ? drawerWidth : 56,
+    width: open ? drawerWidth : drawerWidthMobile,
     transition: theme.transitions.create("width", {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
     }),
     overflowX: "hidden",
-    backgroundColor: "#e9ecf2",
+    backgroundColor: "white",
     color: "black",
     borderRight: "none",
   },
@@ -126,10 +131,11 @@ export default function Dashboard() {
         position: "relative",
         textAlign: "center",
         fontFamily: "Roboto, sans-serif",
-        backgroundColor: "white",
+        backgroundColor: "#f4f4f9",
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
+        borderRadius: "30px",
       }}
     >
       <CssBaseline />
@@ -137,10 +143,12 @@ export default function Dashboard() {
         position="fixed"
         sx={{
           zIndex: theme.zIndex.drawer + 1,
-          backgroundColor: "#ffffff",
+          backgroundColor: "white",
           boxShadow: "none",
-          marginLeft: open ? `${drawerWidth}px` : "56px",
-          width: open ? `calc(100% - ${drawerWidth}px)` : `calc(100% - 56px)`,
+          marginLeft: open ? `${drawerWidth}px` : `${drawerWidthMobile}px`, // Adjusted for mobile view
+          width: open
+            ? `calc(100% - ${drawerWidth}px)`
+            : `calc(100% - ${drawerWidthMobile}px)`,
           transition: theme.transitions.create(["margin", "width"], {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.leavingScreen,
@@ -160,32 +168,49 @@ export default function Dashboard() {
               QuickCard
             </Typography>
           )}
-          <IconButton
-            onClick={handleProfileClick}
+          {/* Add Notification and Chat Icons */}
+          <Box
             sx={{
-              color: "gray",
-              position: "absolute",
-              right: 20,
+              display: "flex",
+              alignItems: "center",
+              gap: 1,
+              ml: "auto", // Pushes icons to the right side
             }}
           >
-            <HiOutlineUserCircle style={{ fontSize: "30px", color: "gray" }} />
-          </IconButton>
-          <Menu
-            anchorEl={anchorEl}
-            open={openProfileMenu}
-            onClose={handleProfileClose}
-            anchorOrigin={{
-              vertical: "top",
-              horizontal: "right",
-            }}
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "right",
-            }}
-          >
-            <MenuItem onClick={handleProfileClose}>Profile</MenuItem>
-            <MenuItem onClick={handleProfileClose}>Logout</MenuItem>
-          </Menu>
+            <IconButton sx={{ color: "gray" }}>
+              <NotificationsNoneOutlinedIcon
+                style={{ fontSize: "25px", color: "#453c72" }}
+              />
+            </IconButton>
+            <IconButton sx={{ color: "gray" }}>
+              <ChatBubbleOutlineOutlinedIcon
+                style={{ fontSize: "24px", color: "#453c72" }}
+              />
+            </IconButton>
+            {/* Profile Icon */}
+            <IconButton onClick={handleProfileClick}>
+              <HiOutlineUserCircle
+                style={{ fontSize: "25px", color: "#453c72" }}
+              />
+            </IconButton>
+            <Menu
+              anchorEl={anchorEl}
+              open={openProfileMenu}
+              onClose={handleProfileClose}
+              anchorOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+              sx={{ marginTop: "40px" }}
+            >
+              <MenuItem onClick={handleProfileClose}>Profile</MenuItem>
+              <MenuItem onClick={handleProfileClose}>Logout</MenuItem>
+            </Menu>
+          </Box>
         </Toolbar>
       </AppBar>
 
