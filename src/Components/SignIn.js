@@ -49,7 +49,7 @@ function CustomPasswordField() {
   return (
     <FormControl sx={{ my: 2 }} fullWidth variant="outlined">
       <InputLabel size="small" htmlFor="outlined-adornment-password">
-        Password
+        Password*
       </InputLabel>
       <OutlinedInput
         id="outlined-adornment-password"

@@ -8,6 +8,7 @@ import {
   Paper,
   TablePagination,
   InputBase,
+  useMediaQuery,
 } from "@mui/material";
 import { LuSend } from "react-icons/lu";
 import { IoAlert } from "react-icons/io5";
@@ -19,6 +20,7 @@ const Status = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [searchQuery, setSearchQuery] = useState("");
+  const isMobile = useMediaQuery("(max-width: 600px)"); // Detect mobile screens
 
   const emailStatusData = {
     sent: [
@@ -44,18 +46,13 @@ const Status = () => {
     setSearchQuery(event.target.value);
   };
 
-  const handleTabChange = (event, newValue) => {
-    setCurrentTab(newValue);
-    setPage(0); // Reset to the first page when the tab changes
-  };
-
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0); // Reset to the first page when rows per page changes
+    setPage(0);
   };
 
   const filterEmails = (emails) => {
@@ -81,8 +78,8 @@ const Status = () => {
             sx={{
               borderBottom: "1px solid #e0e0e0",
               ":hover": {
-                backgroundColor: "#f9f9f9", // Light hover effect
-                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)", // Subtle shadow
+                backgroundColor: "#f9f9f9",
+                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
               },
               transition: "background-color 0.3s, box-shadow 0.3s",
             }}
@@ -93,7 +90,7 @@ const Status = () => {
               primaryTypographyProps={{
                 fontWeight: "bold",
                 fontSize: "16px",
-                color: "#333", // Neutral color for primary text
+                color: "#333",
               }}
               secondaryTypographyProps={{
                 color: "#666",
@@ -118,7 +115,7 @@ const Status = () => {
       style={{
         minHeight: "100vh",
         padding: "20px",
-        paddingTop: "30px",
+        paddingTop: "20px",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -129,41 +126,49 @@ const Status = () => {
       <Box
         sx={{
           display: "flex",
-          alignItems: "center",
-          backgroundColor: "#f2f6fa",
-          borderRadius: "4px",
-          width: "200px",
-          padding: "2px 10px",
-          position: "absolute", // Make sure it stays on the right
-          right: "120px", // Position to the right side
-          marginbottom: "20px",
-          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+          justifyContent: "flex-end",
+          width: "100%",
+          marginBottom: "20px",
         }}
       >
-        <SearchIcon sx={{ color: "#635bff" }} />
-        <InputBase
+        <Box
           sx={{
-            ml: 1,
-            flex: 1,
-            color: "#635bff",
-            fontSize: "14px",
+            display: "flex",
+            alignItems: "center",
+            backgroundColor: "#f2f6fa",
+            borderRadius: "4px",
+            width: { xs: "120px", sm: "200px" },
+            padding: "2px 10px",
+            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+            justifyContent: "space-between",
           }}
-          placeholder="Search..."
-          value={searchQuery}
-          onChange={handleSearchChange}
-        />
+        >
+          <SearchIcon
+            sx={{
+              color: "#635bff",
+              fontSize: { xs: "18px", sm: "20px" },
+            }}
+          />
+          <InputBase
+            sx={{
+              flex: 1,
+              color: "#635bff",
+              fontSize: "14px",
+            }}
+            placeholder="Search..."
+            value={searchQuery}
+            onChange={handleSearchChange}
+          />
+        </Box>
       </Box>
 
       <Paper
         elevation={3}
         sx={{
           maxWidth: "1200px",
-          width: "90%",
+          width: { xs: "100%", sm: "90%", md: "100%" },
           padding: "30px",
           borderRadius: "8px",
-          marginTop: "30px",
-          paddingBottom: "30px",
-          marginTop: "60px",
         }}
       >
         <Box
@@ -174,63 +179,44 @@ const Status = () => {
             paddingBottom: "10px",
           }}
         >
-          <Typography
-            sx={{
-              fontWeight: currentTab === "sent" ? "bold" : "normal",
-              backgroundColor: currentTab === "sent" ? "#453c72" : "#e0e0e0",
-              color: currentTab === "sent" ? "white" : "black",
-              cursor: "pointer",
-              padding: "8px 16px",
-              borderRadius: "6px",
-              // boxShadow: "0 4px 8px rgb(69,60,114)",
-              ":hover": {
-                backgroundColor: currentTab === "sent" ? "#453c72" : "#d6d6d6",
-              },
-              fontSize: "16px",
-            }}
-            onClick={() => setCurrentTab("sent")}
-          >
-            <LuSend /> Sent
-          </Typography>
-          <Typography
-            sx={{
-              fontWeight: currentTab === "failed" ? "bold" : "normal",
-              backgroundColor: currentTab === "failed" ? "#635bff" : "#e0e0e0",
-              color: currentTab === "failed" ? "white" : "black",
-              cursor: "pointer",
-              padding: "8px 16px",
-              borderRadius: "6px",
-              // boxShadow: "0 4px 8px rgb(69,60,114)",
-              ":hover": {
-                backgroundColor:
-                  currentTab === "failed" ? "#635bff" : "#d6d6d6",
-              },
-              fontSize: "16px",
-            }}
-            onClick={() => setCurrentTab("failed")}
-          >
-            <IoAlert /> Failed
-          </Typography>
-          <Typography
-            sx={{
-              fontWeight: currentTab === "responded" ? "bold" : "normal",
-              backgroundColor:
-                currentTab === "responded" ? "#635bff" : "#e0e0e0",
-              color: currentTab === "responded" ? "white" : "black",
-              cursor: "pointer",
-              padding: "8px 16px",
-              borderRadius: "6px",
-              // boxShadow: "0 4px 8px rgb(69,60,114)",
-              ":hover": {
-                backgroundColor:
-                  currentTab === "responded" ? "#635bff" : "#d6d6d6",
-              },
-              fontSize: "16px",
-            }}
-            onClick={() => setCurrentTab("responded")}
-          >
-            <LuReply /> Responded
-          </Typography>
+          {["sent", "failed", "responded"].map((tab) => {
+            const isActive = currentTab === tab;
+            const Icon =
+              tab === "sent" ? LuSend : tab === "failed" ? IoAlert : LuReply;
+
+            return (
+              <Typography
+                key={tab}
+                sx={{
+                  fontWeight: isActive ? "bold" : "normal",
+                  backgroundColor: isActive ? "#52459f" : "#e0e0e0",
+                  color: isActive ? "white" : "black",
+                  cursor: "pointer",
+                  padding: "8px 16px",
+                  borderRadius: "6px",
+                  boxShadow: isActive
+                    ? "0 4px 8px rgba(82, 69, 159, 0.5)"
+                    : "none",
+                  ":hover": {
+                    backgroundColor: isActive ? "#52459f" : "#d6d6d6",
+                  },
+                  fontSize: "16px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+                onClick={() => setCurrentTab(tab)}
+              >
+                {isMobile ? (
+                  <Icon />
+                ) : (
+                  <>
+                    <Icon /> {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                  </>
+                )}
+              </Typography>
+            );
+          })}
         </Box>
 
         <Box sx={{ paddingBottom: "20px" }}>
@@ -245,6 +231,21 @@ const Status = () => {
           page={page}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
+          sx={{
+            "& .MuiTablePagination-selectLabel": {
+              fontSize: isMobile ? "12px" : "14px", // Adjust font size for mobile
+            },
+            "& .MuiTablePagination-select": {
+              fontSize: isMobile ? "12px" : "14px", // Adjust font size for mobile
+              padding: isMobile ? "4px 8px" : "6px 10px", // Adjust padding for mobile
+            },
+            "& .MuiTablePagination-toolbar": {
+              minHeight: isMobile ? "48px" : "56px", // Adjust toolbar height for mobile
+            },
+            "& .MuiTablePagination-caption": {
+              fontSize: isMobile ? "12px" : "14px", // Adjust font size for mobile
+            },
+          }}
         />
       </Paper>
     </div>

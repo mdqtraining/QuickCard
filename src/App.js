@@ -1,31 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import { Box, Button, Typography, Snackbar, Alert } from "@mui/material";
 import {
-  Box,
-  Button,
-  Typography,
-  Snackbar,
-  Alert
-} from '@mui/material';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { styled } from '@mui/system';
-import Dashboard from './Components/Dashboard';
-import TemplateTable from './Components/TemplateTable';
-import Template from './Components/Template';
-import Status from './Components/Status';
-import Publish from './Components/Publish';
-import SignIn from './Components/SignIn';
-import SignUp from './Components/SignUp';
-import ImageUploading from './Components/ImageUploading';
-import CardData from './Components/CardData';
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import { styled } from "@mui/system";
+import Dashboard from "./Components/Dashboard";
+import TemplateTable from "./Components/TemplateTable";
+import Template from "./Components/Template";
+import Status from "./Components/Status";
+import Publish from "./Components/Publish";
+import SignIn from "./Components/SignIn";
+import SignUp from "./Components/SignUp";
+import ImageUploading from "./Components/ImageUploading";
+import CardData from "./Components/CardData";
 
 const DragDropArea = styled(Box)(({ theme }) => ({
-  border: '2px dashed #1976d2',
-  borderRadius: '8px',
-  padding: '20px',
-  textAlign: 'center',
-  color: '#1976d2',
-  cursor: 'pointer',
-  marginBottom: '20px',
+  border: "2px dashed #1976d2",
+  borderRadius: "8px",
+  padding: "20px",
+  textAlign: "center",
+  color: "#1976d2",
+  cursor: "pointer",
+  marginBottom: "20px",
 }));
 
 const App = () => {

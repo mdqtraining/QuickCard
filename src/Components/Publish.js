@@ -63,11 +63,13 @@ const Publish = () => {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        padding: "40px",
+        padding: "20px",
+        // paddingTop: "none",
         backgroundColor: "#f4f4f9",
         minHeight: "100vh",
         boxSizing: "border-box",
         borderRadius: "30px",
+        justifyContent: "center", // Center content vertically
       }}
     >
       <h2
@@ -78,11 +80,14 @@ const Publish = () => {
           marginBottom: "20px",
           textAlign: "center",
         }}
-      ></h2>
+      >
+        {/* Title if needed */}
+      </h2>
 
       <div
         style={{
-          width: "800px",
+          width: "100%", // Make container width flexible
+          maxWidth: "800px", // Limit max width for large screens
           backgroundColor: "#fff",
           borderRadius: "8px",
           boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
@@ -94,7 +99,7 @@ const Publish = () => {
           <label
             htmlFor="template"
             style={{
-              fontSize: "16px",
+              fontSize: { xs: "10px", sm: "14px", md: "16px" },
               marginBottom: "8px",
               display: "block",
               textAlign: "left",
@@ -138,7 +143,6 @@ const Publish = () => {
                 border: "1px solid #ccc",
                 backgroundColor: "#fff",
                 boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-                // zIndex: 10,
               }}
             >
               <div

@@ -1,7 +1,6 @@
 import * as React from "react";
 import { styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
-import Drawer from "@mui/material/Drawer";
 import CssBaseline from "@mui/material/CssBaseline";
 import IconButton from "@mui/material/IconButton";
 import List from "@mui/material/List";
@@ -19,6 +18,7 @@ import { HiOutlineUpload } from "react-icons/hi";
 import { FaDatabase } from "react-icons/fa";
 import { Typography } from "@mui/material";
 import { HiOutlineUserCircle } from "react-icons/hi2";
+import Drawer from "@mui/material/Drawer";
 import Template from "./Template";
 import TemplateTable from "./TemplateTable";
 import Status from "./Status";
@@ -131,7 +131,7 @@ export default function Dashboard() {
         position: "relative",
         textAlign: "center",
         fontFamily: "Roboto, sans-serif",
-        backgroundColor: "#f4f4f9",
+        backgroundColor: "white",
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
@@ -162,7 +162,7 @@ export default function Dashboard() {
               sx={{
                 fontWeight: "bold",
                 color: "#333",
-                marginLeft: "20px",
+                marginLeft: "5px",
               }}
             >
               QuickCard
@@ -173,24 +173,31 @@ export default function Dashboard() {
             sx={{
               display: "flex",
               alignItems: "center",
-              gap: 1,
+              gap: 0.1,
               ml: "auto", // Pushes icons to the right side
             }}
           >
-            <IconButton sx={{ color: "gray" }}>
+            <IconButton
+              sx={{ color: "gray", fontSize: { xs: "20px", sm: "25px" } }}
+            >
               <NotificationsNoneOutlinedIcon
-                style={{ fontSize: "25px", color: "#453c72" }}
+                style={{ fontSize: "inherit", color: "#453c72" }}
               />
             </IconButton>
-            <IconButton sx={{ color: "gray" }}>
+            <IconButton
+              sx={{ color: "gray", fontSize: { xs: "20px", sm: "24px" } }}
+            >
               <ChatBubbleOutlineOutlinedIcon
-                style={{ fontSize: "24px", color: "#453c72" }}
+                style={{ fontSize: "inherit", color: "#453c72" }}
               />
             </IconButton>
             {/* Profile Icon */}
-            <IconButton onClick={handleProfileClick}>
+            <IconButton
+              onClick={handleProfileClick}
+              sx={{ fontSize: { xs: "20px", sm: "25px" } }}
+            >
               <HiOutlineUserCircle
-                style={{ fontSize: "25px", color: "#453c72" }}
+                style={{ fontSize: "inherit", color: "#453c72" }}
               />
             </IconButton>
             <Menu
@@ -292,12 +299,26 @@ export default function Dashboard() {
           component="main"
           sx={{
             flexGrow: 1,
-            padding: theme.spacing(3),
-            height: "100vh",
+            paddingTop: 0.1, // Added paddingTop for proper alignment below the AppBar
+            height: "100vh", // Ensures the height covers full screen
             overflowY: "auto",
+            marginLeft: "10px",
           }}
         >
           <DrawerHeader />
+          {/* Display the active page title */}
+          <Typography
+            variant="h6"
+            sx={{
+              textAlign: "left",
+              fontWeight: "bold",
+              marginBottom: "20px",
+              color: "#333",
+            }}
+          >
+            {activePage || "Select a Page"}
+          </Typography>
+          {/* Render the selected page component */}
           {activePage === "Dashboard" && <TemplateTable />}
           {activePage === "Template" && <Template />}
           {activePage === "Status" && <Status />}

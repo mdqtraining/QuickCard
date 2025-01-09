@@ -19,12 +19,15 @@ import {
   Tooltip,
   TablePagination,
   InputBase,
+  Grid,
+  useMediaQuery,
 } from "@mui/material";
 import { BiSolidEdit } from "react-icons/bi";
 import { MdOutlineDelete } from "react-icons/md";
 import { AiOutlineEye } from "react-icons/ai";
 import CloseIcon from "@mui/icons-material/Close";
 import SearchIcon from "@mui/icons-material/Search";
+import AddIcon from "@mui/icons-material/Add"; // Import AddIcon for the mobile view
 
 const TemplateTable = () => {
   const [openDialog, setOpenDialog] = useState(false);
@@ -51,6 +54,9 @@ const TemplateTable = () => {
 
   // Search state
   const [searchQuery, setSearchQuery] = useState("");
+
+  // Media query for detecting screen size (mobile vs desktop)
+  const isMobile = useMediaQuery("(max-width:600px)");
 
   const handleOpenDialog = (isAdd = false, template = null) => {
     setIsAddTemplate(isAdd);
@@ -138,54 +144,81 @@ const TemplateTable = () => {
         backgroundColor: "#f4f4f9",
         minHeight: "100vh",
         padding: "20px",
+        position: "relative",
+        // width: "90%",
+        maxWidth: "1200px",
+        margin: "0 auto",
         borderRadius: "30px",
         position: "relative",
       }}
     >
-      <div style={{ margintop: "20px" }}>
-        <Button
-          variant="contained"
-          // color="primary"
-          onClick={() => handleOpenDialog(true)}
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            position: "absolute",
-            left: "40px",
-            backgroundColor: "#453c72",
-            fontWeight: "bold",
-          }}
-        >
-          Create Template
-        </Button>
-
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            backgroundColor: "#f2f6fa",
-            borderRadius: "4px",
-            width: "200px",
-            padding: "2px 10px",
-            position: "absolute", // Make sure it stays on the right
-            right: "40px", // Position to the right side
-            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-          }}
-        >
-          <SearchIcon sx={{ color: "#453C72" }} />
-          <InputBase
+      <Grid
+        container
+        spacing={2}
+        sx={{ marginBottom: "20px", alignItems: "center" }}
+      >
+        {/* Create Template Button */}
+        <Grid item xs={6} sm={6} md={6}>
+          <Button
+            variant="contained"
+            onClick={() => handleOpenDialog(true)}
             sx={{
-              ml: 1,
-              flex: 1,
-              color: "#453C72",
-              fontSize: "14px",
+              display: "flex",
+              alignItems: "center",
+              backgroundColor: "#453c72",
+              fontWeight: "bold",
+              justifyContent: "center",
+              padding: "6px 10px",
+              fontSize: isMobile ? "10px" : "12px",
+              minWidth: "unset",
+              width: "auto",
             }}
-            placeholder="Search..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </Box>
-      </div>
+          >
+            {isMobile ? (
+              <AddIcon sx={{ fontSize: "20px" }} />
+            ) : (
+              "Create Template"
+            )}
+          </Button>
+        </Grid>
+
+        {/* Search Bar */}
+        <Grid
+          item
+          xs={6}
+          sm={6}
+          md={6}
+          sx={{
+            display: "flex",
+            justifyContent: isMobile ? "flex-start" : "flex-end",
+          }}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              backgroundColor: "#f2f6fa",
+              borderRadius: "4px",
+              width: isMobile ? "100%" : "200px", // Set width to 200px for desktop
+              padding: "2px 10px",
+              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+            }}
+          >
+            <SearchIcon sx={{ color: "#453C72" }} />
+            <InputBase
+              sx={{
+                ml: 1,
+                flex: 1,
+                color: "#453C72",
+                fontSize: "14px",
+              }}
+              placeholder="Search..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </Box>
+        </Grid>
+      </Grid>
 
       {selectedRows.length > 0 && (
         <Tooltip title="Delete Selected">
@@ -205,11 +238,11 @@ const TemplateTable = () => {
         </Tooltip>
       )}
 
-      <TableContainer component={Paper} sx={{ marginTop: "70px" }}>
+      <TableContainer component={Paper} sx={{ marginTop: "20px" }}>
         <Table>
           <TableHead>
             <TableRow sx={{ backgroundColor: "#f8f9fa" }}>
-              <TableCell>
+              <TableCell sx={{ fontSize: isMobile ? "12px" : "14px" }}>
                 <Checkbox
                   indeterminate={
                     selectedRows.length > 0 &&
@@ -228,14 +261,29 @@ const TemplateTable = () => {
                   }
                 />
               </TableCell>
-              <TableCell align="center">ID</TableCell>
-              <TableCell align="center">Template Name</TableCell>
-              <TableCell align="center">Action</TableCell>
+              <TableCell
+                align="center"
+                sx={{ fontSize: isMobile ? "12px" : "14px" }}
+              >
+                ID
+              </TableCell>
+              <TableCell
+                align="center"
+                sx={{ fontSize: isMobile ? "12px" : "14px" }}
+              >
+                Template Name
+              </TableCell>
+              <TableCell
+                align="center"
+                sx={{ fontSize: isMobile ? "12px" : "14px" }}
+              >
+                Action
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {filteredTemplates
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) // Slice the templates for pagination
+              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((template, index) => (
                 <TableRow
                   key={template.id}
@@ -243,39 +291,58 @@ const TemplateTable = () => {
                     backgroundColor: index % 2 === 0 ? "#ffffff" : "#f3f3f3",
                   }}
                 >
-                  <TableCell>
+                  <TableCell sx={{ fontSize: isMobile ? "12px" : "14px" }}>
                     <Checkbox
                       checked={selectedRows.includes(template.id)}
                       onChange={() => handleCheckboxChange(template.id)}
                     />
                   </TableCell>
-                  <TableCell align="center">
+                  <TableCell
+                    align="center"
+                    sx={{ fontSize: isMobile ? "12px" : "14px" }}
+                  >
                     {String(template.id).padStart(3, "0")}
                   </TableCell>
-                  <TableCell align="center">{template.name}</TableCell>
-                  <TableCell align="center">
-                    <Tooltip title="View">
-                      <IconButton onClick={() => handleView(template)}>
-                        <AiOutlineEye style={{ fontSize: "20px" }} />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Edit">
-                      <IconButton
-                        onClick={() => handleOpenDialog(false, template)}
-                      >
-                        <BiSolidEdit style={{ fontSize: "20px" }} />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Delete">
-                      <IconButton
-                        onClick={() => handleDelete(template.id)}
-                        color="error"
-                      >
-                        <MdOutlineDelete
-                          style={{ fontSize: "20px", color: "gray" }}
-                        />
-                      </IconButton>
-                    </Tooltip>
+                  <TableCell
+                    align="center"
+                    sx={{ fontSize: isMobile ? "12px" : "14px" }}
+                  >
+                    {template.name}
+                  </TableCell>
+                  <TableCell
+                    align="center"
+                    sx={{ fontSize: isMobile ? "12px" : "14px" }}
+                  >
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        gap: 1,
+                      }}
+                    >
+                      <Tooltip title="View">
+                        <IconButton onClick={() => handleView(template)}>
+                          <AiOutlineEye style={{ fontSize: "20px" }} />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="Edit">
+                        <IconButton
+                          onClick={() => handleOpenDialog(false, template)}
+                        >
+                          <BiSolidEdit style={{ fontSize: "20px" }} />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="Delete">
+                        <IconButton
+                          onClick={() => handleDelete(template.id)}
+                          color="error"
+                        >
+                          <MdOutlineDelete
+                            style={{ fontSize: "20px", color: "gray" }}
+                          />
+                        </IconButton>
+                      </Tooltip>
+                    </Box>
                   </TableCell>
                 </TableRow>
               ))}
@@ -283,7 +350,7 @@ const TemplateTable = () => {
         </Table>
       </TableContainer>
 
-      {/* Pagination component */}
+      {/* Pagination */}
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
@@ -292,6 +359,9 @@ const TemplateTable = () => {
         page={page}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
+        sx={{
+          fontSize: isMobile ? "12px" : "14px", // Adjust font size for mobile view
+        }}
       />
 
       <Dialog open={openDialog} onClose={handleCloseDialog}>
@@ -325,7 +395,6 @@ const TemplateTable = () => {
                 color: "#333",
               },
             }}
-            // style={{ width: "500px", height: "300px" }}
           />
         </DialogContent>
         <DialogActions>

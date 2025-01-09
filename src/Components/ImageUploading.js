@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { Box, Button, Typography, Snackbar, Alert } from "@mui/material";
+import {
+  Box,
+  Button,
+  Typography,
+  Snackbar,
+  Alert,
+  useMediaQuery,
+} from "@mui/material";
 import { styled } from "@mui/system";
 
 const DragDropArea = styled(Box)(({ theme }) => ({
@@ -43,6 +50,9 @@ const ImageUploading = () => {
     setNotification(false);
   };
 
+  // Check if the screen size is mobile
+  const isMobile = useMediaQuery("(max-width:768px)");
+
   return (
     <Box
       sx={{
@@ -52,19 +62,24 @@ const ImageUploading = () => {
         justifyContent: "center",
         minHeight: "100vh",
         backgroundColor: "#f4f4f9",
-        padding: "40px",
+        padding: isMobile ? "10px" : "40px", // Reduce padding for mobile
         borderRadius: "30px",
       }}
     >
-      <Typography variant="h4" gutterBottom>
+      <Typography
+        variant="h4"
+        gutterBottom
+        sx={{ fontSize: isMobile ? "20px" : "32px" }}
+      >
         Upload Image
       </Typography>
+
       <DragDropArea
         onDragOver={handleDragOver}
         onDrop={handleDrop}
         style={{ color: "#52459f" }}
       >
-        <Typography style={{ color: "#52459f" }}>
+        <Typography sx={{ fontSize: isMobile ? "10px" : "16px" }}>
           DRAG AND DROP FILES HERE OR CLICK TO SELECT
         </Typography>
         <input
@@ -78,7 +93,13 @@ const ImageUploading = () => {
           <Button
             variant="contained"
             component="span"
-            sx={{ mt: 2, backgroundColor: "#52459f", color: "white" }}
+            sx={{
+              mt: 2,
+              backgroundColor: "#52459f",
+              color: "white",
+              fontSize: isMobile ? "10px" : "16px", // Smaller font size on mobile
+              padding: isMobile ? "6px 12px" : "8px 16px", // Smaller padding on mobile
+            }}
           >
             Upload Images
           </Button>
@@ -89,10 +110,12 @@ const ImageUploading = () => {
         variant="contained"
         color="primary"
         onClick={handleSubmit}
-        style={{
-          marginTop: "40px",
+        sx={{
+          marginTop: { xs: "20px", sm: "30px", md: "40px" },
           backgroundColor: "#52459f",
           color: "white",
+          fontSize: isMobile ? "10px" : "16px", // Smaller font size on mobile
+          padding: isMobile ? "6px 12px" : "8px 16px", // Smaller padding on mobile
         }}
       >
         Submit

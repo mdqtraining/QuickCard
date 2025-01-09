@@ -186,6 +186,11 @@ export default function SignUp() {
         variant="text"
         sx={{ textTransform: "none", marginTop: 2 }}
         onClick={() => navigate("sign-in")}
+        style={{
+          alignItems: "center",
+          justifyContent: "center",
+          paddingRight: "10px",
+        }}
       >
         Already have an account? Sign In
       </Button>
@@ -477,30 +482,33 @@ export default function SignUp() {
                 </InputAdornment>
               }
               sx={{
-                height: "40px", // Adjust height of the input field
+                height: "40px", // Adjust height
                 padding: "0 14px", // Padding for input text
               }}
               label="Confirm Password"
             />
           </FormControl>
 
-          {/* Submit Button */}
+          {/* Submit SignUp */}
           <Button
             variant="contained"
             onClick={submit}
             sx={{
               width: "100%",
-              height: "40px", // Adjust height of button
-              marginTop: "10px",
+              height: "40px", // Adjust button height
+              marginTop: 2,
+              padding: "6px",
               backgroundColor: "#52459f",
               "&:hover": { backgroundColor: "#41378e" },
             }}
           >
-            {isLoading ? "Signing up..." : "Sign Up"}
+            Sign Up
           </Button>
 
           {/* Sign In Link */}
-          <SignInLink />
+          <Grid container justifyContent="center" sx={{ marginTop: 2 }}>
+            <SignInLink />
+          </Grid>
         </Box>
       </Grid>
     </div>
