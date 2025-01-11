@@ -12,6 +12,7 @@ import {
   Box,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
+import { useMediaQuery } from "@mui/material";
 
 const data = [
   {
@@ -101,10 +102,12 @@ function CardData() {
     setPage(0);
   };
 
+  // Use media query to check if the screen size is mobile
+  const isMobile = useMediaQuery("(max-width: 600px)");
+
   return (
     <div
       style={{
-        // padding: "40px",
         borderRadius: "30px",
         backgroundColor: "#f4f4f9",
         minHeight: "90vh",
@@ -115,7 +118,7 @@ function CardData() {
         sx={{
           display: "flex",
           flexDirection: "column",
-          alignItems: "flex-end",
+          alignItems: isMobile ? "flex-start" : "flex-end",
           padding: "20px",
         }}
       >
@@ -130,7 +133,8 @@ function CardData() {
             maxWidth: "200px",
             padding: "2px 10px",
             position: "absolute",
-            right: "60px",
+            right: isMobile ? "10px" : "60px",
+            top: isMobile ? "10px" : "20px",
             boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
           }}
         >

@@ -14,6 +14,7 @@ import Status from "./Components/Status";
 import Publish from "./Components/Publish";
 import SignIn from "./Components/SignIn";
 import SignUp from "./Components/SignUp";
+import ForgotPassword from "./Components/ForgotPassword"; // Added ForgotPassword import
 import ImageUploading from "./Components/ImageUploading";
 import CardData from "./Components/CardData";
 
@@ -58,7 +59,8 @@ const App = () => {
           path="/sign-up"
           element={<SignUp onSignupSuccess={handleSignupSuccess} />}
         />
-
+        <Route path="/forgot-password" element={<ForgotPassword />} />{" "}
+        {/* Added ForgotPassword route */}
         {/* Protected Routes */}
         {isLoggedIn && (
           <>
@@ -71,7 +73,6 @@ const App = () => {
             <Route path="/card-data" element={<CardData />} />
           </>
         )}
-
         {/* Catch-all for undefined routes */}
         <Route
           path="*"

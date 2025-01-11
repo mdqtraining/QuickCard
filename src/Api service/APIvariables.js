@@ -17,4 +17,12 @@ const forgot_password = `${commonApi}forgot_password`;
 
 const forgot_pwd_otp = `${commonApi}forgot_pwd_otp`;
 
-export { send_otp, validate_otp, user_signup };
+export {
+  commonApi,
+  send_otp,
+  validate_otp,
+  user_signup,
+  user_signin,
+  forgot_password,
+  forgot_pwd_otp,
+};
