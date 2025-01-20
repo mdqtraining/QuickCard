@@ -1,47 +1,70 @@
-import React from "react";
-import {
-  Button,
-  FormControl,
-  InputLabel,
-  OutlinedInput,
-  TextField,
-  InputAdornment,
-  Link,
-  IconButton,
-  Grid,
-  Box,
-} from "@mui/material";
-import Visibility from "@mui/icons-material/Visibility";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import { AppProvider } from "@toolpad/core/AppProvider";
-import { SignInPage } from "@toolpad/core/SignInPage";
-import { useTheme } from "@mui/material/styles";
-import { useNavigate } from "react-router-dom";
-import productsImage from "../assets/products.png"; // Ensure the file path is correct
+import React, { useState, useEffect } from 'react';
+import { Box, Button, Grid, TextField, Typography, IconButton, InputAdornment, Snackbar, Alert, Link, FormControl, InputLabel, OutlinedInput } from '@mui/material';
+import { useForm } from 'react-hook-form';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { user_signin } from '../Api service/APIvariables'; 
+import productsImage from '../assets/products.png'; 
 
-const providers = [{ id: "credentials", name: "Email and Password" }];
+function SignIn({ setsuccessOpen, setsuccessMessage, setsuccessStatus, setsuccessColor }) {
+  const navigate = useNavigate();
+  const { register, formState: { errors }, handleSubmit } = useForm();
+  const [open, setOpen] = useState(false);
+  const [status, setStatus] = useState(false);
+  const [color, setColor] = useState('error'); 
+  const [message, setMessage] = useState('');
+  const [showPassword, setShowPassword] = useState(true);
 
-function CustomEmailField() {
-  return (
-    <TextField
-      id="input-with-icon-textfield"
-      label="Email"
-      name="email"
-      type="email"
-      size="small"
-      required
-      fullWidth
-      variant="outlined"
-      sx={{
-        fontSize: { xs: "0.875rem", sm: "1rem" },
-        whiteSpace: "nowrap", // Prevent wrapping
-      }}
-    />
-  );
-}
+  // Effect to check if the user is already logged in
+  useEffect(() => {
+    const isAuthenticated = localStorage.getItem('auth');
+    if (isAuthenticated) {
+      navigate('/dashboard'); 
+    }
+  }, [navigate]);
 
-function CustomPasswordField() {
-  const [showPassword, setShowPassword] = React.useState(false);
+  const onSubmit = (data) => {
+    console.log("Submitted Data:", data); // Debugging line
+
+    const serverData = new FormData();
+    for (const key in data) {
+      serverData.append(key, data[key]);
+    }
+
+    if (!navigator.onLine) {
+      setMessage('Your internet is offline');
+      setOpen(true);
+      setStatus(false);
+      setColor('error');
+    } else {
+      axios({
+        method: 'POST', // Update to 'POST' method for login
+        url: user_signin, // Use the user_signin URL imported from config.js
+        data: serverData,
+      }).then((res) => {
+        if (res.data.error) {
+          setMessage(res.data.message);
+          setOpen(true);
+          setStatus(false);
+          setColor('error');
+        } else {
+          // On successful login, store authentication token and redirect to dashboard
+          localStorage.setItem('auth', true);
+          navigate('/dashboard');  // Redirect to dashboard after login
+          setsuccessOpen(true);
+          setsuccessMessage(res.data.message);
+          setsuccessStatus(true);
+          setsuccessColor(true);
+        }
+      }).catch((err) => {
+        setMessage('Oops, something went wrong: ' + err.message);
+        setOpen(true);
+        setStatus(false);
+        setColor('error');
+      });
+    }
+  };
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -50,208 +73,118 @@ function CustomPasswordField() {
   };
 
   return (
-    <FormControl sx={{ my: 2 }} fullWidth variant="outlined">
-      <InputLabel
-        size="small"
-        htmlFor="outlined-adornment-password"
-        sx={{ fontSize: { xs: "0.875rem", sm: "1rem" } }}
+    <Box sx={{ bgcolor: '#eaf4fc', height: '100vh' }}>
+      <Snackbar
+        open={open}
+        autoHideDuration={4000}
+        onClose={() => setOpen(false)}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       >
-        Password*
-      </InputLabel>
-      <OutlinedInput
-        id="outlined-adornment-password"
-        type={showPassword ? "text" : "password"}
-        name="password"
-        size="small"
-        sx={{ fontSize: { xs: "0.875rem", sm: "1rem" }, whiteSpace: "nowrap" }}
-        endAdornment={
-          <InputAdornment position="end">
-            <IconButton
-              aria-label="toggle password visibility"
-              onClick={handleClickShowPassword}
-              onMouseDown={handleMouseDownPassword}
-              edge="end"
-              size="small"
-            >
-              {showPassword ? (
-                <VisibilityOff fontSize="inherit" />
-              ) : (
-                <Visibility fontSize="inherit" />
-              )}
-            </IconButton>
-          </InputAdornment>
-        }
-        label="Password"
-      />
-    </FormControl>
-  );
-}
-
-function CustomButton() {
-  return (
-    <Button
-      type="submit"
-      size="small"
-      disableElevation
-      fullWidth
-      sx={{
-        my: 2,
-        fontSize: { xs: "0.875rem", sm: "1rem" },
-        whiteSpace: "nowrap",
-      }}
-      style={{
-        boxShadow: "0 4px 8px rgba(82, 69, 159, 255)",
-        backgroundColor: "#52459f",
-        color: "white",
-      }}
-    >
-      Sign In
-    </Button>
-  );
-}
-
-function SignUpLink() {
-  const navigate = useNavigate();
-  return (
-    <Button
-      variant="text"
-      sx={{
-        textTransform: "none",
-        marginTop: 2,
-        fontSize: { xs: "0.875rem", sm: "1rem" },
-        whiteSpace: "nowrap", // Prevent wrapping
-      }}
-      onClick={() => navigate("/sign-up")}
-    >
-      Don’t have an account? Sign Up
-    </Button>
-  );
-}
-
-function ForgotPasswordLink() {
-  return (
-    <Link
-      href="/forgot-password"
-      variant="body2"
-      sx={{
-        fontSize: { xs: "0.75rem", sm: "0.875rem" },
-        whiteSpace: "nowrap", // Prevent wrapping
-      }}
-    >
-      Forgot password?
-    </Link>
-  );
-}
-
-function Title() {
-  return (
-    <h2
-      style={{
-        marginBottom: 8,
-        fontSize: "1.5rem", // Default font size for desktop
-        whiteSpace: "nowrap", // Prevent wrapping
-      }}
-    >
-      Sign In to QuickCard
-    </h2>
-  );
-}
-
-function Subtitle() {
-  return (
-    <p
-      style={{
-        fontSize: "1rem", // Default font size for desktop
-        whiteSpace: "nowrap", // Prevent wrapping
-      }}
-    >
-      Welcome, Please sign in to continue
-    </p>
-  );
-}
-
-export default function SlotsSignIn({ onSignInSuccess }) {
-  const theme = useTheme();
-  const navigate = useNavigate();
-
-  const handleSignIn = (provider, formData) => {
-    const email = formData.get("email");
-    const password = formData.get("password");
-
-    if (email && password) {
-      onSignInSuccess();
-      navigate("/dashboard");
-    } else {
-      alert("Please enter both email and password!");
-    }
-  };
-
-  return (
-    <div className="sign-in">
-      <AppProvider theme={theme}>
-        <Grid container>
-          {/* Left Column: Image */}
-          <Grid
-            item
-            xs={0}
-            md={6}
-            sx={{
-              display: { xs: "none", md: "flex" },
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Box
-              sx={{
-                height: "100%",
-                width: "100%",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                p: 2,
-              }}
-            >
+        <Alert onClose={() => setOpen(false)} severity={status ? 'success' : color} sx={{ width: '100%' }}>
+          {message}
+        </Alert>
+      </Snackbar>
+      <Box>
+        <Grid container sx={{ height: '100vh' }} alignItems={'center'}>
+          
+          <Grid item xs={0} md={6} sx={{ display: { xs: 'none', md: 'flex' }, justifyContent: 'center', alignItems: 'center' }}>
+            <Box sx={{ height: '100%', width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', p: 2 }}>
               <img
                 src={productsImage}
                 alt="Products"
-                style={{
-                  maxWidth: "80%",
-                  maxHeight: "100%",
-                  objectFit: "contain",
-                }}
+                style={{ maxWidth: '80%', maxHeight: '100%', objectFit: 'contain' }}
               />
             </Box>
           </Grid>
 
-          {/* Right Column: Sign-In Form */}
+          
           <Grid item xs={12} md={6}>
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                height: "100vh",
-                px: { xs: 4, sm: 6, md: 5 },
-                width: { xs: "100%", sm: "90%", md: "80%" },
-              }}
-            >
-              <SignInPage
-                signIn={handleSignIn}
-                slots={{
-                  title: Title,
-                  subtitle: Subtitle,
-                  emailField: CustomEmailField,
-                  passwordField: CustomPasswordField,
-                  submitButton: CustomButton,
-                  forgotPasswordLink: ForgotPasswordLink,
-                  signUpLink: SignUpLink,
-                }}
-                providers={providers}
-              />
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', px: { xs: 4, sm: 6, md: 5 }, width: { xs: '100%', sm: '90%', md: '80%' } }}>
+              <Box>
+                <Box sx={{ py: 2 }}>
+                  <Typography fontSize={{ lg: 30, md: 26, sm: 23, xs: 20 }} color="primary" variant="h5">
+                    Welcome
+                  </Typography>
+                </Box>
+                <form onSubmit={handleSubmit(onSubmit)}>
+                  <Box sx={{ py: 2 }}>
+                    <TextField
+                      error={errors.email ? true : false}
+                      helperText={errors.email && errors.email.type === 'required' ? 'Email is required' : ''}
+                      fullWidth
+                      label="Email"
+                      variant="filled"
+                      {...register('email', { required: true })}
+                    />
+                  </Box>
+                  <Box sx={{ py: 2 }}>
+                    <FormControl sx={{ my: 2 }} fullWidth variant="outlined">
+                      <InputLabel size="small" htmlFor="outlined-adornment-password" sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}>
+                        Password*
+                      </InputLabel>
+                      <OutlinedInput
+                        id="outlined-adornment-password"
+                        type={showPassword ? 'text' : 'password'}
+                        name="password"
+                        size="small"
+                        sx={{ fontSize: { xs: '0.875rem', sm: '1rem' }, whiteSpace: 'nowrap' }}
+                        endAdornment={
+                          <InputAdornment position="end">
+                            <IconButton
+                              aria-label="toggle password visibility"
+                              onClick={handleClickShowPassword}
+                              onMouseDown={handleMouseDownPassword}
+                              edge="end"
+                              size="small"
+                            >
+                              {showPassword ? <VisibilityOff fontSize="inherit" /> : <Visibility fontSize="inherit" />}
+                            </IconButton>
+                          </InputAdornment>
+                        }
+                        label="Password"
+                      />
+                    </FormControl>
+                  </Box>
+                  <Box sx={{ py: 2 }}>
+                    <Button
+                      type="submit"
+                      sx={{ p: 2 }}
+                      fullWidth
+                      variant="contained"
+                      color="primary"
+                      style={{ boxShadow: '0 4px 8px rgba(82, 69, 159, 255)', backgroundColor: '#52459f', color: 'white' }}
+                    >
+                      Submit
+                    </Button>
+                  </Box>
+                </form>
+
+                <Box sx={{ py: 2 }}>
+                  <Link href="/forgot-password" variant="body2" sx={{ fontSize: { xs: '0.75rem', sm: '0.875rem' }, whiteSpace: 'nowrap' }}>
+                    Forgot password?
+                  </Link>
+                </Box>
+                <Box>
+                  <Button
+                    variant="text"
+                    sx={{
+                      textTransform: 'none',
+                      marginTop: 2,
+                      fontSize: { xs: '0.875rem', sm: '1rem' },
+                      whiteSpace: 'nowrap',
+                    }}
+                    onClick={() => navigate('/sign-up')}
+                  >
+                    Don’t have an account? Sign Up
+                  </Button>
+                </Box>
+              </Box>
             </Box>
           </Grid>
         </Grid>
-      </AppProvider>
-    </div>
+      </Box>
+    </Box>
   );
 }
+
+export default SignIn;
